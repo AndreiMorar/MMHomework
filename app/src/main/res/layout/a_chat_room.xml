@@ -43,6 +43,7 @@
         android:padding="10dp"
         android:textColor="@color/app_black"
         android:textColorHint="@color/app_grey"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btnSend"

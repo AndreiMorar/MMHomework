@@ -3,5 +3,6 @@
     <style name="Theme.MuzMatchHomework" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowBackground">@color/app_white</item>
         <item name="colorPrimaryDark">@color/app_pink</item>
+        <item name="colorAccent">@color/app_pink</item>
     </style>
 </resources>

@@ -31,7 +31,10 @@ class AChatRoom : AppCompatActivity() {
 
     private fun setInputActiveState(active: Boolean) {
         _binding.apply {
-            btnSend.isActivated = active
+            btnSend.apply {
+                isActivated = active
+                isClickable = active
+            }
             etInput.isActivated = active
         }
     }
