@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MuzMatchHomework</string>
+
+    <string name="chat_room_input_hint">What\'s on your mind?</string>
 </resources>
