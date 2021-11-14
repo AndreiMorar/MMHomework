@@ -1,13 +1,19 @@
 package com.mab.mmhomework.adapters
 
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mab.mmhomework.R
 import com.mab.mmhomework.db.entities.ChatMsg
 import com.mab.mmhomework.db.entities.TChatMsg
-import kotlinx.android.synthetic.main.item_chat_text.view.*
+import com.mab.mmhomework.user.MockUserManager
+import kotlinx.android.synthetic.main.item_chat_msg_text.view.*
 
 /**
  * @author MAB
@@ -40,7 +46,8 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
         //            else ->
         //        }
         return ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_chat_text, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_chat_msg_text, parent, false)
         )
     }
 
@@ -48,16 +55,39 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
         holder.bind(items[position])
     }
 
-    fun addData(msgs : List<ChatMsg>){
+    fun addData(msgs: List<ChatMsg>) {
+        val diffCount = items.size - msgs.size;
         items.clear()
         items.addAll(msgs)
-        notifyDataSetChanged()
+        val curCount = items.size
+        notifyItemRangeInserted(curCount - diffCount, curCount)
     }
 
     inner class ViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
         fun bind(msg: ChatMsg) = with(itemView) {
+            val isLocalMsg = msg.senderId == MockUserManager.CUR_USER_ID
+
             tvMsg.text = msg.message
+
+            val gravity: Int = (if (isLocalMsg) Gravity.END else Gravity.START)
+            (itemView as LinearLayout).gravity = gravity
+            (vBubble.layoutParams as FrameLayout.LayoutParams).gravity = gravity
+
+            tvMsg.setBackgroundResource(
+                if (isLocalMsg) R.drawable.shape_chat_bubble_local else R.drawable.shape_chat_bubble_remote
+            )
+
+            tvMsg.setTextColor(
+                ContextCompat.getColor(
+                    itemView.context,
+                    if (isLocalMsg) R.color.app_white else R.color.app_black
+                )
+            )
+
+
+
         }
+
     }
 
 }

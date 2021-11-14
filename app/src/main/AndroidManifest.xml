@@ -14,6 +14,7 @@
         <activity
             android:name=".ui.activity.AChatRoom"
             android:exported="true"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
