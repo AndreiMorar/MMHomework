@@ -56,8 +56,6 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
     }
 
     fun addData(msgs: List<ChatMsg>) {
-
-
         val listIds = items.map { it.id }.toSet()
         val newItems = msgs.filter { it.id !in listIds }
 
@@ -68,10 +66,6 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
         val diff = curCount - newCount
         notifyItemRangeInserted(diff, curCount)
         notifyItemChanged(diff - 1)
-    }
-
-    fun handleBubbleUI() {
-
     }
 
     inner class ViewHolder(itemview: View) :

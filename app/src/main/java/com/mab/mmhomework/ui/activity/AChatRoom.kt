@@ -15,6 +15,8 @@ import com.mab.mmhomework.adapters.ChatRoomAdapter
 import com.mab.mmhomework.databinding.AChatRoomBinding
 import com.mab.mmhomework.extensions.afterTextChanged
 import com.mab.mmhomework.global.App
+import com.mab.mmhomework.user.MockUserManager
+import com.mab.mmhomework.websocket.events.WSRespChatMsg
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -45,6 +47,16 @@ class AChatRoom : AppCompatActivity() {
             etInput.afterTextChanged {
                 setInputActiveState(it.trim().isNotEmpty())
             }
+            ivAvatar.setOnClickListener {
+                lifecycleScope.launch() {
+                    (application as App).webSocket.onMockEventListener(
+                        WSRespChatMsg.mockNewInstance(
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+                            MockUserManager.REMOTE_USER_ID
+                        )
+                    )
+                }
+            }
             btnSend.setOnClickListener { sendInputMsg() }
 
             rvList.apply {
@@ -52,18 +64,14 @@ class AChatRoom : AppCompatActivity() {
                 layoutManager = LinearLayoutManager(this@AChatRoom).also {
                     it.stackFromEnd = true
                 }
+                itemAnimator = null
             }
 
         }
 
         _viewModel.chatMsgsLiveData.observe(this, Observer { msgs ->
             adapter.addData(msgs)
-            lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    delay(300)
-                    _binding.rvList.smoothScrollToPosition(adapter.itemCount - 1)
-                }
-            }
+            _binding.rvList.scrollToPosition(adapter.itemCount - 1)
         })
     }
 
