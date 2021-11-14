@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.mab.mmhomework.databinding.AChatRoomBinding
 import com.mab.mmhomework.extensions.afterTextChanged
+import com.mab.mmhomework.global.App
 
 /**
  * @author MAB
@@ -14,7 +15,9 @@ class AChatRoom : AppCompatActivity() {
 
     private lateinit var _binding: AChatRoomBinding
 
-    private val _viewModel: AChatRoomViewModel by viewModels()
+    private val _viewModel: AChatRoomViewModel by viewModels {
+        AChatRoomViewModel.ChatRoomViewModelFactory((application as App).repo)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +32,10 @@ class AChatRoom : AppCompatActivity() {
         }
 
         _viewModel.chatMsgsLiveData.observe(this, Observer { msgs ->
-            //TODO:
+            println("== DATA ===============")
+            msgs.forEach { msg ->
+                println("== DATA $msg")
+            }
         })
     }
 

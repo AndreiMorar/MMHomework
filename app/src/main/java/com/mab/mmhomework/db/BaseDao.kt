@@ -11,11 +11,11 @@ import androidx.room.Update
 @Dao
 interface BaseDao<in T> {
     @Insert
-    fun insert(t: T)
+    suspend fun insert(t: T)
 
     @Update
-    fun update(t: T)
+    suspend fun update(t: T)
 
     @Delete
-    fun delete(t: T)
+    suspend fun delete(t: T)
 }
