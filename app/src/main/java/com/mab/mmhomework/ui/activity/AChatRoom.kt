@@ -1,13 +1,10 @@
 package com.mab.mmhomework.ui.activity
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.KeyEvent
-import android.view.inputmethod.EditorInfo
-import android.widget.TextView
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.TextViewOnReceiveContentListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,10 +14,7 @@ import com.mab.mmhomework.extensions.afterTextChanged
 import com.mab.mmhomework.global.App
 import com.mab.mmhomework.user.MockUserManager
 import com.mab.mmhomework.websocket.events.WSRespChatMsg
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * @author MAB
@@ -58,13 +52,27 @@ class AChatRoom : AppCompatActivity() {
                 }
             }
             btnSend.setOnClickListener { sendInputMsg() }
-
             rvList.apply {
                 adapter = this@AChatRoom.adapter
                 layoutManager = LinearLayoutManager(this@AChatRoom).also {
                     it.stackFromEnd = true
                 }
                 itemAnimator = null
+                //Keep
+                addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
+                    override fun onLayoutChange(
+                        v: View, left: Int, top: Int, right: Int, bottom: Int,
+                        leftWas: Int, topWas: Int, rightWas: Int, bottomWas: Int
+                    ) {
+                        val heightWas = bottomWas - topWas
+                        //Only trigger when size decreases (keyboard shows up)
+                        //and not when it gets hidden
+                        if (v.height < heightWas && this@AChatRoom.adapter.itemCount > 0) {
+                            rvList.smoothScrollToPosition(this@AChatRoom.adapter.itemCount - 1)
+                        }
+                    }
+
+                })
             }
 
         }
