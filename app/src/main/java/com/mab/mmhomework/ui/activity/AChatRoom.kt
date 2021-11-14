@@ -3,6 +3,7 @@ package com.mab.mmhomework.ui.activity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.mab.mmhomework.databinding.AChatRoomBinding
 import com.mab.mmhomework.extensions.afterTextChanged
 
@@ -27,6 +28,9 @@ class AChatRoom : AppCompatActivity() {
             btnSend.setOnClickListener { sendInputMsg() }
         }
 
+        _viewModel.chatMsgsLiveData.observe(this, Observer { msgs ->
+            //TODO:
+        })
     }
 
     private fun setInputActiveState(active: Boolean) {
