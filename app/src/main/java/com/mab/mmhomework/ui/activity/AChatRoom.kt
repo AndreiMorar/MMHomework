@@ -42,6 +42,7 @@ class AChatRoom : AppCompatActivity() {
                 setInputActiveState(it.trim().isNotEmpty())
             }
             ivAvatar.setOnClickListener {
+                //Trigger a message from our partner
                 lifecycleScope.launch() {
                     (application as App).webSocket.onMockEventListener(
                         WSRespChatMsg.mockNewInstance(
@@ -57,17 +58,19 @@ class AChatRoom : AppCompatActivity() {
                 layoutManager = LinearLayoutManager(this@AChatRoom).also {
                     it.stackFromEnd = true
                 }
+                //Remove insert/delete animations
                 itemAnimator = null
-                //Keep
+                //Keep chat list at bottom when keyboard is triggered
                 addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
                     override fun onLayoutChange(
                         v: View, left: Int, top: Int, right: Int, bottom: Int,
                         leftWas: Int, topWas: Int, rightWas: Int, bottomWas: Int
                     ) {
+                        if (this@AChatRoom.adapter.itemCount == 0) return
                         val heightWas = bottomWas - topWas
                         //Only trigger when size decreases (keyboard shows up)
                         //and not when it gets hidden
-                        if (v.height < heightWas && this@AChatRoom.adapter.itemCount > 0) {
+                        if (v.height < heightWas) {
                             rvList.smoothScrollToPosition(this@AChatRoom.adapter.itemCount - 1)
                         }
                     }

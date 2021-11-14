@@ -1,68 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="5dp"
-    android:weightSum="1">
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tvSection"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:includeFontPadding="false"
+        android:padding="10dp"
+        android:text="Thursday 11:59"
+        android:textColor="@color/app_grey"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
-        android:id="@+id/vInnercontainer"
-        android:layout_width="0dp"
+        android:id="@+id/vMessageContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.66"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
-        android:layoutDirection="locale"
-        android:gravity="end"
-        android:orientation="horizontal">
+        android:paddingBottom="5dp"
+        android:weightSum="1"
+        app:layout_constraintTop_toBottomOf="@id/tvSection">
 
-        <ImageView
-            android:id="@+id/ivTailRemote"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/vInnerContainer"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:src="@drawable/ic_left_tail" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/vBubble"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_chat_bubble_remote">
-
-            <TextView
-                android:id="@+id/tvMsg"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:includeFontPadding="false"
-                android:paddingStart="10dp"
-                android:paddingTop="10dp"
-                android:paddingEnd="10dp"
-                android:text="Ana are mere, pere si prune"
-                android:textColor="@color/app_black"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toTopOf="@id/ivSeen"
-                app:layout_constraintStart_toStartOf="parent" />
+            android:layout_weight="0.66"
+            android:layoutDirection="locale"
+            android:orientation="horizontal"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp">
 
             <ImageView
-                android:id="@+id/ivSeen"
+                android:id="@+id/ivTailRemote"
                 android:layout_width="wrap_content"
-                android:layout_height="8dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginBottom="2dp"
-                android:src="@drawable/ic_seen"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_left_tail" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/vBubble"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_chat_bubble_remote">
 
-        <ImageView
-            android:id="@+id/ivTailLocal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:src="@drawable/ic_right_tail" />
+                <TextView
+                    android:id="@+id/tvMsg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:includeFontPadding="false"
+                    android:paddingStart="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="Ana are mere, pere si prune"
+                    android:textColor="@color/app_black"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@id/ivSeen"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageView
+                    android:id="@+id/ivSeen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="8dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:src="@drawable/ic_seen"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/ivTailLocal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_right_tail" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

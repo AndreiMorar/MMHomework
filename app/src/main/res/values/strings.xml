@@ -2,4 +2,7 @@
     <string name="app_name">MuzMatchHomework</string>
 
     <string name="chat_room_input_hint">What\'s on your mind?</string>
+
+    <string name="chat_room_section"><![CDATA[<html><b>%1$s</b> %2$s</html>]]></string>
+
 </resources>

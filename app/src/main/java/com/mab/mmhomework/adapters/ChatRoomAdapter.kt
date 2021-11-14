@@ -1,5 +1,6 @@
 package com.mab.mmhomework.adapters
 
+import android.text.Html
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,10 @@ import com.mab.mmhomework.db.entities.ChatMsg
 import com.mab.mmhomework.db.entities.TChatMsg
 import com.mab.mmhomework.user.MockUserManager
 import kotlinx.android.synthetic.main.item_chat_msg_text.view.*
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * @author MAB
@@ -23,7 +28,8 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
         private val TYPE_PHOTO = 2
         private val TYPE_VIDEO = 3
 
-        private val TAIL_DIFF_MESSAGE_MS = 20000
+        private val TAIL_DIFF_MESSAGE_MS = 20000 //20sec
+        private val SECTION_DIFF_MESSAGE_MS = 2 * 60 * 1000 //2 min
     }
 
     private val items: ArrayList<ChatMsg> = arrayListOf()
@@ -77,10 +83,10 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
                 tvMsg.text = msg.message
 
                 val gravity: Int = (if (isLocalMsg) Gravity.END else Gravity.START)
-                (itemView as LinearLayout).gravity = gravity
-                (vInnercontainer as LinearLayout).gravity = gravity
+                (vMessageContainer as LinearLayout).gravity = gravity
+                (vInnerContainer as LinearLayout).gravity = gravity
 
-                handleBubble(isLocalMsg, itemView, prevMsg, msg, nextMsg, curPosition)
+                handleBubble(isLocalMsg, prevMsg, msg, nextMsg, curPosition)
 
                 tvMsg.setTextColor(
                     ContextCompat.getColor(
@@ -91,11 +97,11 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
 
                 ivSeen.visibility = if (isLocalMsg) View.VISIBLE else View.INVISIBLE
 
+                handleSection(prevMsg, msg)
             }
 
         fun handleBubble(
             isLocalMsg: Boolean,
-            bubble: View,
             prevMsg: ChatMsg?,
             msg: ChatMsg,
             nextMsg: ChatMsg?,
@@ -139,6 +145,39 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
                 return true
             }
             return false
+        }
+
+        fun handleSection(prevMsg: ChatMsg?, msg: ChatMsg) = with(itemView) {
+            if (haveSection(prevMsg, msg)) {
+                setSectionValue(msg)
+                tvSection.visibility = View.VISIBLE
+            } else {
+                tvSection.visibility = View.GONE
+            }
+        }
+
+        fun haveSection(prevMsg: ChatMsg?, msg: ChatMsg): Boolean {
+            //If no previous messages
+            if (prevMsg == null) return true
+            //If previous message was sent more than X millis ago
+            return msg.timestamp - prevMsg.timestamp >= SECTION_DIFF_MESSAGE_MS
+        }
+
+        fun setSectionValue(msg: ChatMsg) = with(itemView) {
+            var day = ""
+            var time = ""
+            var sdf = SimpleDateFormat("EEEE", Locale.getDefault())
+            try {
+                day = sdf.format(msg.timestamp)
+            } catch (e: ParseException) {
+            }
+            sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+            try {
+                time = sdf.format(msg.timestamp)
+            } catch (e: ParseException) {
+            }
+            @SuppressWarnings("deprecation")
+            tvSection.text = Html.fromHtml(context.getString(R.string.chat_room_section, day, time))
         }
 
     }
