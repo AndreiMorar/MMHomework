@@ -26,7 +26,7 @@ class MockWebSocket {
         for (i in 1..randomizer.nextInt(-4, 4)) {
             if (i < 0) continue
             onMockEventListener(
-                WSRespChatMsg.mockNewInstance("$i - ${msg.message}", MockUserManager.REMOTE_USER_ID)
+                WSRespChatMsg.mockNewInstance("Echoed #$i ${msg.message}", MockUserManager.REMOTE_USER_ID)
             )
         }
     }

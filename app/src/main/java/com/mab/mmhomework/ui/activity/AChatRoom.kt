@@ -60,7 +60,7 @@ class AChatRoom : AppCompatActivity() {
             adapter.addData(msgs)
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    delay(100)
+                    delay(300)
                     _binding.rvList.smoothScrollToPosition(adapter.itemCount - 1)
                 }
             }

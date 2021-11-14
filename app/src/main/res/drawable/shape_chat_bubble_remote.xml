@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/app_light_blue"/>
-    <corners android:radius="@dimen/chat_bubble_radius"/>
+    <solid android:color="@color/app_light_blue" />
+    <corners
+        android:bottomRightRadius="@dimen/chat_bubble_radius"
+        android:topLeftRadius="@dimen/chat_bubble_radius"
+        android:topRightRadius="@dimen/chat_bubble_radius" />
 </shape>
