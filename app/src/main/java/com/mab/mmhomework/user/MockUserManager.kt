@@ -3,7 +3,7 @@ package com.mab.mmhomework.user
 /**
  * @author MAB
  */
-class MockupUserManager {
+class MockUserManager {
 
     companion object {
         const val CUR_USER_ID = 100

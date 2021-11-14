@@ -3,7 +3,6 @@ package com.mab.mmhomework.ui.activity
 import androidx.lifecycle.*
 import com.mab.mmhomework.db.entities.ChatMsg
 import com.mab.mmhomework.repository.ChatRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
@@ -15,7 +14,7 @@ class AChatRoomViewModel(private val repo: ChatRepository) : ViewModel() {
 
     fun sendMsg(msg: String){
         viewModelScope.launch {
-            repo.addMsg(msg)
+            repo.sendLocalMsg(msg)
         }
     }
 
