@@ -26,9 +26,8 @@ data class ChatMsg(
             )
         }
 
-        private fun generateId(msg: String, timestamp: Long, userId: Int): String {
-            return Utils.hash("$msg$timestamp$userId")
-        }
+        fun generateId(msg: String, timestamp: Long, userId: Int): String =
+            Utils.hash("$msg$timestamp$userId")
     }
 }
 

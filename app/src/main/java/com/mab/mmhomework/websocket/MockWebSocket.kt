@@ -1,8 +1,10 @@
 package com.mab.mmhomework.websocket
 
 import com.mab.mmhomework.db.entities.ChatMsg
+import com.mab.mmhomework.db.entities.toInternal
 import com.mab.mmhomework.repository.ChatRepository
 import com.mab.mmhomework.user.MockUserManager
+import com.mab.mmhomework.websocket.events.WSRespChatMsg
 import kotlin.random.Random
 
 /**
@@ -20,16 +22,16 @@ class MockWebSocket {
         //sendEvent(...)
         //
 
-        //trigger a mock reply from the u
+        //trigger a mock reply from the remote user
         for (i in 1..randomizer.nextInt(1, 4)) {
             onMockEventListener(
-                ChatMsg.newInstance("$i - ${msg.message}", MockUserManager.REMOTE_USER_ID)
+                WSRespChatMsg.mockNewInstance("$i - ${msg.message}", MockUserManager.REMOTE_USER_ID)
             )
-        } // ser
+        }
     }
 
-    suspend fun onMockEventListener(msg: ChatMsg) {
-        repo.addRemoteMsg(msg)
+    suspend fun onMockEventListener(msg: WSRespChatMsg) {
+        repo.addRemoteMsg(msg.toInternal())
     }
 
 }

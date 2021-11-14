@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.mab.mmhomework.adapters.ChatRoomAdapter
 import com.mab.mmhomework.databinding.AChatRoomBinding
 import com.mab.mmhomework.extensions.afterTextChanged
 import com.mab.mmhomework.global.App
@@ -14,6 +16,8 @@ import com.mab.mmhomework.global.App
 class AChatRoom : AppCompatActivity() {
 
     private lateinit var _binding: AChatRoomBinding
+
+    private val adapter = ChatRoomAdapter()
 
     private val _viewModel: AChatRoomViewModel by viewModels {
         AChatRoomViewModel.ChatRoomViewModelFactory((application as App).repo)
@@ -29,13 +33,16 @@ class AChatRoom : AppCompatActivity() {
                 setInputActiveState(it.trim().isNotEmpty())
             }
             btnSend.setOnClickListener { sendInputMsg() }
+
+            rvList.apply {
+                adapter = this@AChatRoom.adapter
+                layoutManager = LinearLayoutManager(this@AChatRoom)
+            }
+
         }
 
         _viewModel.chatMsgsLiveData.observe(this, Observer { msgs ->
-            println("== DATA ===============")
-            msgs.forEach { msg ->
-                println("== DATA $msg")
-            }
+            adapter.addData(msgs)
         })
     }
 
