@@ -1,7 +1,5 @@
 package com.mab.mmhomework.websocket.events
 
-import androidx.room.ColumnInfo
-import androidx.room.PrimaryKey
 import com.mab.mmhomework.db.entities.ChatMsg
 import com.mab.mmhomework.db.entities.TChatMsg
 

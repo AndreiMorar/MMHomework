@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
  */
 class ChatRepository(
     private val chatMsgDAO: ChatMsgDAO,
-    private val websocket: MockWebSocket
+    private val webSocket: MockWebSocket
 ) {
 
     val allMsgsFlow: Flow<List<ChatMsg>> = chatMsgDAO.getAll()
@@ -19,7 +19,7 @@ class ChatRepository(
     suspend fun sendLocalMsg(msg: String) {
         ChatMsg.newInstance(msg, MockUserManager.CUR_USER_ID).apply {
             chatMsgDAO.insert(this)
-            websocket.sendMsg(this)
+            webSocket.sendMsg(this)
         }
     }
 

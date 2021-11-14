@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.TextViewOnReceiveContentListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,7 +42,7 @@ class AChatRoom : AppCompatActivity() {
             }
             ivAvatar.setOnClickListener {
                 //Trigger a message from our partner
-                lifecycleScope.launch() {
+                lifecycleScope.launch {
                     (application as App).webSocket.onMockEventListener(
                         WSRespChatMsg.mockNewInstance(
                             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
@@ -52,7 +51,6 @@ class AChatRoom : AppCompatActivity() {
                     )
                 }
             }
-            btnSend.setOnClickListener { sendInputMsg() }
             rvList.apply {
                 adapter = this@AChatRoom.adapter
                 layoutManager = LinearLayoutManager(this@AChatRoom).also {
@@ -77,7 +75,7 @@ class AChatRoom : AppCompatActivity() {
 
                 })
             }
-
+            btnSend.setOnClickListener { sendInputMsg() }
         }
 
         _viewModel.chatMsgsLiveData.observe(this, Observer { msgs ->

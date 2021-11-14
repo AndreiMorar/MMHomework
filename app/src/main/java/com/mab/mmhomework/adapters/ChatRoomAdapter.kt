@@ -24,12 +24,12 @@ import kotlin.collections.ArrayList
 class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
 
     companion object {
-        private val TYPE_TEXT = 1
-        private val TYPE_PHOTO = 2
-        private val TYPE_VIDEO = 3
+        private const val TYPE_TEXT = 1
+        private const val TYPE_PHOTO = 2
+        private const val TYPE_VIDEO = 3
 
-        private val TAIL_DIFF_MESSAGE_MS = 20000 //20sec
-        private val SECTION_DIFF_MESSAGE_MS = 2 * 60 * 1000 //2 min
+        private const val TAIL_DIFF_MESSAGE_MS = 20000 //20sec
+        private const val SECTION_DIFF_MESSAGE_MS = 2 * 60 * 1000 //2 min
     }
 
     private val items: ArrayList<ChatMsg> = arrayListOf()
@@ -41,7 +41,6 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
         TChatMsg.PHOTO.name -> TYPE_PHOTO
         TChatMsg.VIDEO.name -> TYPE_VIDEO
         else -> TYPE_TEXT
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -56,8 +55,7 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
         holder.bind(
             items.getOrNull(position - 1),
             items[position],
-            items.getOrNull(position + 1),
-            position
+            items.getOrNull(position + 1)
         )
     }
 
@@ -74,62 +72,50 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
         notifyItemChanged(diff - 1)
     }
 
-    inner class ViewHolder(itemview: View) :
-        RecyclerView.ViewHolder(itemview) {
-        fun bind(prevMsg: ChatMsg?, msg: ChatMsg, nextMsg: ChatMsg?, curPosition: Int) =
+    inner class ViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
+        fun bind(prevMsg: ChatMsg?, msg: ChatMsg, nextMsg: ChatMsg?) =
             with(itemView) {
                 val isLocalMsg = msg.senderId == MockUserManager.CUR_USER_ID
 
-                tvMsg.text = msg.message
-
+                //Set left or right alignment
                 val gravity: Int = (if (isLocalMsg) Gravity.END else Gravity.START)
                 (vMessageContainer as LinearLayout).gravity = gravity
                 (vInnerContainer as LinearLayout).gravity = gravity
 
-                handleBubble(isLocalMsg, prevMsg, msg, nextMsg, curPosition)
-
-                tvMsg.setTextColor(
-                    ContextCompat.getColor(
-                        itemView.context,
-                        if (isLocalMsg) R.color.app_white else R.color.app_black
-                    )
-                )
-
-                ivSeen.visibility = if (isLocalMsg) View.VISIBLE else View.INVISIBLE
-
+                handleBubble(isLocalMsg, msg, nextMsg)
+                handleText(isLocalMsg, msg)
+                handleSeen(isLocalMsg)
                 handleSection(prevMsg, msg)
             }
 
-        fun handleBubble(
+        private fun handleBubble(
             isLocalMsg: Boolean,
-            prevMsg: ChatMsg?,
             msg: ChatMsg,
-            nextMsg: ChatMsg?,
-            curPosition: Int
+            nextMsg: ChatMsg?
         ) = with(itemView) {
-
             vBubble.setBackgroundResource(
                 if (isLocalMsg) R.drawable.shape_chat_bubble_local
                 else R.drawable.shape_chat_bubble_remote
             )
+            handleTail(isLocalMsg, msg, nextMsg)
+        }
 
-            ivTailLocal.visibility = View.INVISIBLE
-            ivTailRemote.visibility = View.INVISIBLE
-            if (haveTail(prevMsg, msg, nextMsg, curPosition)) {
-                if (isLocalMsg) {
-                    ivTailLocal.visibility = View.VISIBLE
-                } else {
-                    ivTailRemote.visibility = View.VISIBLE
+        private fun handleTail(isLocalMsg: Boolean, msg: ChatMsg, nextMsg: ChatMsg?) =
+            with(itemView) {
+                ivTailLocal.visibility = View.INVISIBLE
+                ivTailRemote.visibility = View.INVISIBLE
+                if (haveTail(msg, nextMsg)) {
+                    if (isLocalMsg) {
+                        ivTailLocal.visibility = View.VISIBLE
+                    } else {
+                        ivTailRemote.visibility = View.VISIBLE
+                    }
                 }
             }
 
-        }
-
-        fun haveTail(
-            prevMsg: ChatMsg?,
+        private fun haveTail(
             msg: ChatMsg,
-            nextMsg: ChatMsg?,
-            curPosition: Int
+            nextMsg: ChatMsg?
         ): Boolean {
             //If we're the most recent message
             if (nextMsg == null) {
@@ -147,7 +133,21 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
             return false
         }
 
-        fun handleSection(prevMsg: ChatMsg?, msg: ChatMsg) = with(itemView) {
+        private fun handleText(isLocalMsg: Boolean, msg: ChatMsg) = with(itemView) {
+            tvMsg.text = msg.message
+            tvMsg.setTextColor(
+                ContextCompat.getColor(
+                    itemView.context,
+                    if (isLocalMsg) R.color.app_white else R.color.app_black
+                )
+            )
+        }
+
+        private fun handleSeen(isLocalMsg: Boolean) = with(itemView) {
+            ivSeen.visibility = if (isLocalMsg) View.VISIBLE else View.INVISIBLE
+        }
+
+        private fun handleSection(prevMsg: ChatMsg?, msg: ChatMsg) = with(itemView) {
             if (haveSection(prevMsg, msg)) {
                 setSectionValue(msg)
                 tvSection.visibility = View.VISIBLE
@@ -156,14 +156,14 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
             }
         }
 
-        fun haveSection(prevMsg: ChatMsg?, msg: ChatMsg): Boolean {
+        private fun haveSection(prevMsg: ChatMsg?, msg: ChatMsg): Boolean {
             //If no previous messages
             if (prevMsg == null) return true
             //If previous message was sent more than X millis ago
             return msg.timestamp - prevMsg.timestamp >= SECTION_DIFF_MESSAGE_MS
         }
 
-        fun setSectionValue(msg: ChatMsg) = with(itemView) {
+        private fun setSectionValue(msg: ChatMsg) = with(itemView) {
             var day = ""
             var time = ""
             var sdf = SimpleDateFormat("EEEE", Locale.getDefault())
