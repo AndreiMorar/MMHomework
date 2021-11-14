@@ -5,5 +5,6 @@
     <dimen name="chat_gradient_width">10dp</dimen>
     <dimen name="chat_avatar_dimen">32dp</dimen>
     <dimen name="chat_bubble_radius">10dp</dimen>
+    <dimen name="chat_bottom_margin_last_item">10dp</dimen>
 
 </resources>

@@ -55,7 +55,8 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
         holder.bind(
             items.getOrNull(position - 1),
             items[position],
-            items.getOrNull(position + 1)
+            items.getOrNull(position + 1),
+            position == itemCount - 1
         )
     }
 
@@ -73,7 +74,7 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
     }
 
     inner class ViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
-        fun bind(prevMsg: ChatMsg?, msg: ChatMsg, nextMsg: ChatMsg?) =
+        fun bind(prevMsg: ChatMsg?, msg: ChatMsg, nextMsg: ChatMsg?, lastItem: Boolean) =
             with(itemView) {
                 val isLocalMsg = msg.senderId == MockUserManager.CUR_USER_ID
 
@@ -81,6 +82,14 @@ class ChatRoomAdapter : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
                 val gravity: Int = (if (isLocalMsg) Gravity.END else Gravity.START)
                 (vMessageContainer as LinearLayout).gravity = gravity
                 (vInnerContainer as LinearLayout).gravity = gravity
+
+                //Bottom margin
+                (itemView.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin =
+                    if (lastItem)
+                        context.resources.getDimensionPixelSize(
+                            R.dimen.chat_bottom_margin_last_item
+                        )
+                    else 0
 
                 handleBubble(isLocalMsg, msg, nextMsg)
                 handleText(isLocalMsg, msg)
